@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Bucket List — Goals Tracker</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (icons) -->
+  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
+  <!-- If you don't have a kit, use this free CDN line instead:
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  -->
+
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#ffb86b;
+      --muted:#9aa6b2;
+      --glass: rgba(255,255,255,0.03);
+      --success:#6ee7b7;
+      --danger:#ff6b6b;
+      --radius:14px;
+      --max-width:980px;
+      --gap:12px;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg, rgba(7,12,20,1) 0%, rgba(11,17,29,1) 100%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .app {
+      width:100%;
+      max-width:var(--max-width);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:18px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:18px;
+      padding:22px;
+      align-items:start;
+    }
+
+    /* Left: main */
+    .main {
+      padding:20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border-radius:12px;
+      min-height:320px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    header.app-header{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    .logo {
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      background:linear-gradient(135deg, rgba(255,184,107,0.12), rgba(110,231,183,0.04));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: "Pacifico", cursive;
+      color:var(--accent);
+      font-size:22px;
+      box-shadow: 0 6px 18px rgba(8,12,20,0.5), inset 0 -6px 20px rgba(255,255,255,0.02);
+    }
+    h1{
+      margin:0;
+      font-size:20px;
+      line-height:1;
+    }
+    p.lead{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* Input row */
+    .input-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .input-row input[type="text"]{
+      flex:1;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:var(--glass);
+      color:inherit;
+      font-size:15px;
+      transition:transform .16s ease, box-shadow .16s ease;
+      outline:none;
+    }
+    .input-row input[type="text"]:focus{
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(11,17,29,0.6);
+    }
+    .btn {
+      background:linear-gradient(180deg,var(--accent), #ff9c38);
+      color:#08101a;
+      border:none;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 6px 14px rgba(255,184,107,0.12);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      transition:transform .12s ease, opacity .12s ease;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.04);
+      color:var(--muted);
+      box-shadow:none;
+    }
+
+    /* Goals list */
+    ul.goals{
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      max-height:54vh;
+      overflow:auto;
+      padding-right:6px;
+    }
+    li.goal {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      border-radius:12px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,0.02);
+      transform-origin:left center;
+      transition:transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .18s ease, opacity .2s ease;
+    }
+    li.goal:hover{ transform: translateY(-4px); box-shadow:0 12px 30px rgba(2,6,23,0.5) }
+
+    .goal .left{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex:1;
+    }
+    /* custom checkbox */
+    .checkbox {
+      width:36px;
+      height:36px;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.03);
+      cursor:pointer;
+      transition:transform .12s ease;
+    }
+    .checkbox input{display:none}
+    .checkbox .icon{
+      font-size:14px;
+      opacity:0;
+      transform:scale(.8);
+      transition:all .18s ease;
+    }
+    .checkbox.checked{
+      background:linear-gradient(180deg,var(--success), #38d19a);
+      border:none;
+    }
+    .checkbox.checked .icon{opacity:1; transform:scale(1); color:#08211a}
+
+    .goal .text {
+      font-size:15px;
+      word-break:break-word;
+    }
+    .goal .meta{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+    .goal.done{ opacity:.6; text-decoration:line-through; color: #c6d7d0; transform:scale(.995) }
+
+    /* action buttons */
+    .actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .icon-btn{
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      cursor:pointer;
+      padding:8px;
+      border-radius:10px;
+      transition:background .12s ease, color .12s ease, transform .08s ease;
+    }
+    .icon-btn:hover{ background:rgba(255,255,255,0.02); color:var(--accent); transform:translateY(-2px) }
+
+    /* Right: stats & tips */
+    .side {
+      padding:20px;
+      min-width:260px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      align-self:stretch;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border-radius:12px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+    .stat{
+      text-align:center;
+      padding:12px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.01);
+    }
+    .stat h3{margin:0;font-size:18px}
+    .stat p{margin:6px 0 0;font-size:12px;color:var(--muted)}
+
+    /* empty state */
+    .empty{
+      text-align:center;
+      padding:28px 18px;
+      border-radius:10px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    /* animations */
+    .fade-in{ animation:fadeIn .28s ease both }
+    .slide-out{ animation:slideOut .26s ease both }
+    @keyframes fadeIn{
+      from{ transform: translateY(8px) scale(.997); opacity:0}
+      to{ transform:none; opacity:1}
+    }
+    @keyframes slideOut{
+      from{ opacity:1; transform: translateX(0) scale(1) }
+      to{ opacity:0; transform: translateX(18px) scale(.98) }
+    }
+
+    /* small screens — stack */
+    @media (max-width:920px){
+      .app{ grid-template-columns: 1fr; padding:16px; gap:14px }
+      .side{ order:2 }
+    }
+
+    @media (max-width:480px){
+      .app{ padding:12px }
+      .logo{ width:44px; height:44px; font-size:18px }
+      .input-row input[type="text"]{ font-size:14px; padding:10px }
+      .btn{ padding:10px 12px }
+      .stat h3{ font-size:16px }
+    }
+
+    /* scrollbar small */
+    ul.goals::-webkit-scrollbar{ width:8px }
+    ul.goals::-webkit-scrollbar-thumb{ background: rgba(255,255,255,0.03); border-radius:8px }
+  </style>
+</head>
+<body>
+  <main class="app" aria-live="polite">
+    <section class="main" aria-labelledby="app-title">
+      <header class="app-header">
+        <div class="logo" aria-hidden="true">♥</div>
+        <div>
+          <h1 id="app-title">My Bucket List</h1>
+          <p class="lead">Add goals, mark 'em done, an' watch your dreams get closer.</p>
+        </div>
+      </header>
+
+      <div class="input-row" role="form" aria-label="Add new goal">
+        <input id="new-goal" type="text" placeholder="Add a new goal — e.g., 'Visit Marrakech at sunset'" aria-label="New goal" />
+        <button id="add-btn" class="btn" aria-label="Add goal"><i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+        <button id="clear-all" title="Clear completed" class="btn ghost" aria-label="Clear completed">Clear done</button>
+      </div>
+
+      <section>
+        <ul id="goals-list" class="goals" aria-label="Bucket list">
+          <!-- items injected here -->
+        </ul>
+        <div id="empty" class="empty" hidden>
+          <p><strong>No goals yet.</strong> Start by adding your first dream. ✨</p>
+        </div>
+      </section>
+    </section>
+
+    <aside class="side" aria-labelledby="stats-title">
+      <div class="card">
+        <h3 id="stats-title">Progress</h3>
+        <div class="stats-grid" style="margin-top:10px">
+          <div class="stat">
+            <h3 id="total-count">0</h3>
+            <p>Total</p>
+          </div>
+          <div class="stat">
+            <h3 id="done-count">0</h3>
+            <p>Completed</p>
+          </div>
+          <div class="stat">
+            <h3 id="remaining-count">0</h3>
+            <p>Remaining</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Tips to reach goals</h4>
+        <ul style="margin:10px 0 0; padding-left:18px; color:var(--muted); font-size:13px">
+          <li>Break big dreams into smaller tasks.</li>
+          <li>Set deadlines and reminders outside this app.</li>
+          <li>Celebrate small wins — check a box, feel proud!</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:auto">
+        <small style="color:var(--muted)">Saved locally in your browser. Works offline. Want to export?</small>
+        <div style="display:flex; gap:8px; margin-top:10px">
+          <button id="export" class="btn ghost" title="Export JSON">Export</button>
+          <button id="import" class="btn ghost" title="Import JSON">Import</button>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // Bucket List App — vanilla JS
+    (function(){
+      const LS_KEY = 'myBucketList_v1';
+      // Elements
+      const input = document.getElementById('new-goal');
+      const addBtn = document.getElementById('add-btn');
+      const listEl = document.getElementById('goals-list');
+      const emptyEl = document.getElementById('empty');
+      const totalCount = document.getElementById('total-count');
+      const doneCount = document.getElementById('done-count');
+      const remainingCount = document.getElementById('remaining-count');
+      const clearAllBtn = document.getElementById('clear-all');
+      const exportBtn = document.getElementById('export');
+      const importBtn = document.getElementById('import');
+
+      let items = [];
+
+      // Helpers
+      function save(){
+        localStorage.setItem(LS_KEY, JSON.stringify(items));
+        renderStats();
+      }
+
+      function load(){
+        try{
+          const raw = localStorage.getItem(LS_KEY);
+          items = raw ? JSON.parse(raw) : [];
+        }catch(e){
+          console.error("Failed to parse localStorage:", e);
+          items = [];
+        }
+      }
+
+      function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7) }
+
+      function createGoalElement(item){
+        const li = document.createElement('li');
+        li.className = 'goal fade-in' + (item.done ? ' done' : '');
+        li.dataset.id = item.id;
+
+        // left container
+        const left = document.createElement('div');
+        left.className = 'left';
+
+        // checkbox
+        const cbWrap = document.createElement('button');
+        cbWrap.className = 'checkbox' + (item.done ? ' checked' : '');
+        cbWrap.setAttribute('aria-pressed', item.done ? 'true' : 'false');
+        cbWrap.title = item.done ? 'Mark as not completed' : 'Mark as completed';
+
+        const cbInput = document.createElement('input');
+        cbInput.type = 'checkbox';
+        cbInput.checked = item.done;
+        cbInput.setAttribute('aria-hidden','true');
+
+        const cbIcon = document.createElement('i');
+        cbIcon.className = 'icon fa fa-check';
+        cbIcon.setAttribute('aria-hidden','true');
+
+        cbWrap.appendChild(cbInput);
+        cbWrap.appendChild(cbIcon);
+
+        // text container
+        const textWrap = document.createElement('div');
+        const title = document.createElement('div');
+        title.className = 'text';
+        title.textContent = item.text;
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const created = new Date(item.created);
+        meta.textContent = 'Added ' + created.toLocaleDateString();
+
+        textWrap.appendChild(title);
+        textWrap.appendChild(meta);
+
+        left.appendChild(cbWrap);
+        left.appendChild(textWrap);
+
+        // actions
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'icon-btn';
+        delBtn.title = 'Delete goal';
+        delBtn.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
+
+        // Append
+        li.appendChild(left);
+        actions.appendChild(delBtn);
+
+        // optional: add edit button
+        const editBtn = document.createElement('button');
+        editBtn.className = 'icon-btn';
+        editBtn.title = 'Edit';
+        editBtn.innerHTML = '<i class="fa fa-pen" aria-hidden="true"></i>';
+        actions.appendChild(editBtn);
+
+        li.appendChild(actions);
+
+        // Events
+        cbWrap.addEventListener('click', (e)=>{
+          e.preventDefault();
+          toggleDone(item.id);
+        });
+        cbInput.addEventListener('change', (e)=>{
+          toggleDone(item.id);
+        });
+
+        delBtn.addEventListener('click', (e)=>{
+          e.preventDefault();
+          removeItemWithAnimation(li, item.id);
+        });
+
+        editBtn.addEventListener('click', (e)=>{
+          e.preventDefault();
+          editItem(item.id);
+        });
+
+        return li;
+      }
+
+      function render(){
+        listEl.innerHTML = '';
+        if(items.length === 0){
+          emptyEl.hidden = false;
+        } else {
+          emptyEl.hidden = true;
+          items.forEach(item => {
+            const el = createGoalElement(item);
+            listEl.appendChild(el);
+          });
+        }
+        renderStats();
+      }
+
+      function renderStats(){
+        const total = items.length;
+        const done = items.filter(i=>i.done).length;
+        const remaining = total - done;
+        totalCount.textContent = total;
+        doneCount.textContent = done;
+        remainingCount.textContent = remaining;
+      }
+
+      function addItem(text){
+        const trimmed = text.trim();
+        if(!trimmed) return;
+        const item = { id: uid(), text: trimmed, done:false, created: Date.now() };
+        items.unshift(item); // newest on top
+        save();
+        render();
+        input.value = '';
+        input.focus();
+      }
+
+      function toggleDone(id){
+        const idx = items.findIndex(i=>i.id===id);
+        if(idx === -1) return;
+        items[idx].done = !items[idx].done;
+        save();
+        // small visual update
+        const li = listEl.querySelector('li[data-id="'+id+'"]');
+        if(li){
+          const cb = li.querySelector('.checkbox');
+          cb.classList.toggle('checked', items[idx].done);
+          li.classList.toggle('done', items[idx].done);
+          cb.setAttribute('aria-pressed', items[idx].done ? 'true' : 'false');
+        }
+      }
+
+      function removeItemWithAnimation(li, id){
+        li.classList.add('slide-out');
+        li.style.pointerEvents = 'none';
+        li.addEventListener('animationend', ()=>{
+          items = items.filter(i=>i.id!==id);
+          save();
+          render();
+        }, { once: true });
+      }
+
+      function editItem(id){
+        const idx = items.findIndex(i=>i.id===id);
+        if(idx === -1) return;
+        const current = items[idx].text;
+        const newText = prompt('Edit your goal:', current);
+        if(newText === null) return; // canceled
+        const trimmed = newText.trim();
+        if(!trimmed) return alert('Goal cannot be empty.');
+        items[idx].text = trimmed;
+        save();
+        render();
+      }
+
+      function clearCompleted(){
+        const anyDone = items.some(i=>i.done);
+        if(!anyDone){
+          alert('No completed items to clear.');
+          return;
+        }
+        if(!confirm('Clear all completed goals?')) return;
+        items = items.filter(i=>!i.done);
+        save();
+        render();
+      }
+
+      // Export / Import
+      function exportJSON(){
+        const payload = JSON.stringify(items, null, 2);
+        const blob = new Blob([payload], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bucketlist-export.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      function importJSON(){
+        const inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = '.json,application/json';
+        inp.addEventListener('change', async (ev)=>{
+          const f = ev.target.files[0];
+          if(!f) return;
+          try{
+            const text = await f.text();
+            const data = JSON.parse(text);
+            if(!Array.isArray(data)) throw new Error('Invalid format');
+            // Basic shape check
+            const cleaned = data.filter(d => d && typeof d.text === 'string' && d.text.trim().length > 0).map(d => ({
+              id: d.id || uid(),
+              text: d.text.trim(),
+              done: !!d.done,
+              created: d.created || Date.now()
+            }));
+            if(!confirm('Import will append ' + cleaned.length + ' items to your list. Continue?')) return;
+            items = cleaned.concat(items);
+            save();
+            render();
+            alert('Import successful.');
+          }catch(err){
+            alert('Failed to import: ' + err.message);
+          }
+        });
+        inp.click();
+      }
+
+      // wire UI
+      addBtn.addEventListener('click', ()=> addItem(input.value));
+      input.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter') addItem(input.value);
+      });
+      clearAllBtn.addEventListener('click', clearCompleted);
+      exportBtn.addEventListener('click', exportJSON);
+      importBtn.addEventListener('click', importJSON);
+
+      // init
+      load();
+      render();
+    })();
+  </script>
+</body>
+</html>
