@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Nature Gallery</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>My Nature Gallery</h1>
+            <p class="subtitle">A collection of moments captured in the wild, from towering peaks to quiet forests.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section id="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="mountains">Mountains</button>
+            <button class="filter-btn" data-filter="forests">Forests</button>
+            <button class="filter-btn" data-filter="animals">Animals</button>
+        </section>
+
+        <section id="gallery">
+            <div class="gallery-item" data-category="mountains">
+                <img src="img/mountains-1.jpg" alt="Snowy mountain peak">
+                <div class="overlay">
+                    <h3>Mountain Peak</h3>
+                    <p>Click to view</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="forests">
+                <img src="img/forests-1.jpg" alt="Sunlight through forest trees">
+                <div class="overlay">
+                    <h3>Misty Forest</h3>
+                    <p>Click to view</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="animals">
+                <img src="img/animals-1.jpg" alt="Red fox in the snow">
+                <div class="overlay">
+                    <h3>Red Fox</h3>
+                    <p>Click to view</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="animals">
+                <img src="img/animals-2.jpg" alt="Eagle in flight">
+                <div class="overlay">
+                    <h3>Eagle in Flight</h3>
+                    <p>Click to view</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="mountains">
+                <img src="img/mountains-2.jpg" alt="Mountain range at sunset">
+                <div class="overlay">
+                    <h3>Alpine Sunset</h3>
+                    <p>Click to view</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="forests">
+                <img src="img/forests-2.jpg" alt="Forest path in autumn">
+                <div class="overlay">
+                    <h3>Autumn Path</h3>
+                    <p>Click to view</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <img src="img/profile-pic.jpg" alt="Portrait of the artist" class="profile-pic">
+                <p>Hi, I'm Alex. I'm a photographer based in Germany, with a passion for capturing the untamed beauty of nature. This gallery is a small window into the world as I see it. I hope you enjoy the view.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Connect with me:</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <p class="copyright">© 2025 My Nature Gallery</p>
+    </footer>
+
+    <div id="lightbox">
+        <span class="close-btn">&times;</span>
+        <img src="" alt="Enlarged view" id="lightbox-img">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
